@@ -26,9 +26,67 @@ class AntdvParser extends BaseUIParser {
             'link': 'a',
             'text': 'span',
             'title': 'h1',
-            'paragraph': 'p'
+            'paragraph': 'p',
+            // 补充更多组件映射
+            'layout': 'div',
+            'layout-header': 'header',
+            'layout-content': 'main',
+            'layout-footer': 'footer',
+            'layout-sider': 'aside',
+            'menu': 'ul',
+            'menu-item': 'li',
+            'submenu': 'li',
+            'breadcrumb': 'nav',
+            'breadcrumb-item': 'span',
+            'pagination': 'ul',
+            'steps': 'div',
+            'step': 'div',
+            'tabs': 'div',
+            'tab-pane': 'div',
+            'tooltip': 'span',
+            'popover': 'span',
+            'modal': 'div',
+            'drawer': 'div',
+            'table': 'table',
+            'list': 'div',
+            'list-item': 'div',
+            'carousel': 'div',
+            'carousel-item': 'div',
+            'collapse': 'div',
+            'collapse-panel': 'div',
+            'timeline': 'ul',
+            'timeline-item': 'li',
+            'tree': 'ul',
+            'tree-node': 'li',
+            'rate': 'ul',
+            'slider': 'div',
+            'switch': 'button',
+            'upload': 'div',
+            'progress': 'div',
+            'spin': 'div',
+            'skeleton': 'div',
+            'dropdown': 'div',
+            'dropdown-button': 'button',
+            'popconfirm': 'span'
         }
-        this.booleanProps = ['block', 'disabled', 'loading', 'ghost', 'wrap']
+        this.booleanProps = ['block', 'disabled', 'loading', 'ghost', 'wrap', 'checked', 'indeterminate']
+        // 添加更多布尔属性
+        this.extendedBooleanProps = [
+            'bordered', 'showSearch', 'allowClear', 'multiple', 'closable',
+            'closeIcon', 'showIcon', 'dot', 'overflowCount', 'showZero',
+            'draggable', 'selectable', 'checkable', 'autoFocus', 'readOnly'
+        ]
+    }
+
+    convertStartTag(componentName, attributes) {
+        const htmlTag = this.componentMap[componentName] || 'div'
+        const convertedAttrs = this.convertAttributes(attributes, componentName)
+        return `<${htmlTag}${convertedAttrs ? ' ' + convertedAttrs : ''}>`
+    }
+
+    convertEndTag(componentName) {
+        const htmlTag = this.componentMap[componentName] || 'div'
+        return `</${htmlTag}>`
     }
 
     convertAttributes(attributes, componentName) {
@@ -51,11 +109,27 @@ class AntdvParser extends BaseUIParser {
             result = result.replace(/size="[^"]+"/, '').trim()
         }
 
+        // 处理 status 属性
+        const statusMatch = result.match(/status="([^"]+)"/)
+        if (statusMatch) {
+            classes.push(`ant-${componentName}-${statusMatch[1]}`)
+            result = result.replace(/status="[^"]+"/, '').trim()
+        }
+
         // 处理布尔属性
         this.booleanProps.forEach(prop => {
             const regex = new RegExp(`\\b${prop}\\b`, 'g')
             if (regex.test(result)) {
                 classes.push(`ant-${componentName}-${prop}`)
+                result = result.replace(regex, '').trim()
+            }
+        })
+
+        // 处理扩展布尔属性
+        this.extendedBooleanProps.forEach(prop => {
+            const regex = new RegExp(`\\b${prop}\\b`, 'g')
+            if (regex.test(result)) {
+                classes.push(`ant-${componentName}-${prop.replace(/([A-Z])/g, '-$1').toLowerCase()}`)
                 result = result.replace(regex, '').trim()
             }
         })
@@ -78,42 +152,75 @@ class AntdvParser extends BaseUIParser {
     }
 
     expandVForLoops(templateContent, componentData) {
-        let result = templateContent
+        let result = templateContent;
 
-        // 处理按钮的 v-for 循环
+        // 自动处理所有 v-for 循环
         result = result.replace(
-            /<a-button\s+v-for="([^"]+)"[^>]*?:key="([^"]+)"[^>]*?:type="([^"]+)"[^>]*>\s*\{\{([^}]+)\}\}\s*<\/a-button>/g,
-            (match, forExpr, keyExpr, typeExpr, contentExpr) => {
-                const arrayName = forExpr.split(' in ')[1]
-                const dataArray = componentData[arrayName] || []
+            /<([a-zA-Z0-9-]+)([^>]*?)v-for="([^"]+)"([^>]*?):key="([^"]+)"([^>]*?)>([\s\S]*?)<\/\1>/g,
+            (match, tagName, beforeFor, forExpr, afterFor, keyExpr, afterKey, content) => {
+                // 提取组件名称（去除前缀 a-）
+                const componentName = tagName.replace(/^a-/, '');
+                
+                // 获取数组名
+                const arrayName = forExpr.split(' in ')[1];
+                const dataArray = componentData[arrayName] || [];
 
-                let buttons = ''
-                dataArray.forEach(item => {
-                    const typeValue = item.type === 'default' ? '' : ` type="${item.type}"`
-                    buttons += `<a-button${typeValue}>${item.text}</a-button>`
-                })
+                // 生成展开的组件
+                let expandedComponents = '';
+                
+                dataArray.forEach((item, index) => {
+                    // 构建组件属性
+                    let attrs = '';
+                    
+                    // 处理 key 属性
+                    const keyValue = item[keyExpr] || item.key || item.id || index;
+                    attrs += ` key="${keyValue}"`;
+                    
+                    // 处理其他属性（从原始标签中提取）
+                    let allAttrs = beforeFor + afterFor + afterKey;
+                    
+                    // 处理文本内容中的插值
+                    let processedContent = content;
+                    if (content.includes('{{') && content.includes('}}')) {
+                        // 简单处理最常见的文本插值情况
+                        processedContent = content.replace(/\{\{([^}]+)\}\}/g, (match, expr) => {
+                            // 清理表达式，移除 item. 前缀
+                            const cleanExpr = expr.trim().replace(/^item\./, '');
+                            return item[cleanExpr] || '';
+                        });
+                    }
+                    
+                    // 特殊处理某些组件的属性
+                    if (tagName === 'a-button' && item.type) {
+                        attrs += ` type="${item.type}"`;
+                    }
+                    
+                    if (tagName === 'a-tab-pane' && item.tab) {
+                        attrs += ` tab="${item.tab}"`;
+                    }
+                    
+                    if (tagName === 'a-menu-item' && (item.key || item.id)) {
+                        attrs += ` key="${item.key || item.id}"`;
+                    }
+                    
+                    // 合并原始属性（移除 v-for 和 :key 相关属性）
+                    const cleanedAttrs = allAttrs
+                        .replace(/v-for="[^"]*"/g, '')
+                        .replace(/:key="[^"]*"/g, '')
+                        .trim();
+                    
+                    if (cleanedAttrs) {
+                        attrs += ' ' + cleanedAttrs;
+                    }
+                    
+                    expandedComponents += `<${tagName}${attrs}>${processedContent}</${tagName}>`;
+                });
 
-                return buttons
+                return expandedComponents;
             }
-        )
+        );
 
-        // 处理项目的 v-for 循环
-        result = result.replace(
-            /<p\s+v-for="([^"]+)"[^>]*?:key="([^"]+)"[^>]*>\s*\{\{([^}]+)\}\}\s*<\/p>/g,
-            (match, forExpr, keyExpr, contentExpr) => {
-                const arrayName = forExpr.split(' in ')[1]
-                const dataArray = componentData[arrayName] || []
-
-                let items = ''
-                dataArray.forEach(item => {
-                    items += `<p>${item.title || item.text || ''}</p>`
-                })
-
-                return items
-            }
-        )
-
-        return result
+        return result;
     }
 }
 

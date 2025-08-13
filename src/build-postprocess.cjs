@@ -110,20 +110,22 @@ class VueToPhpConverter {
     convertToStaticTemplate(templateContent, componentData) {
         // 首先处理 v-for 循环展开
         let result = this.uiParser.expandVForLoops(templateContent, componentData)
-
+    
         // 保留 data-component 属性用于标识组件挂载点
         result = result.replace(/(<[^>]*?)data-component="([^"]+)"([^>]*>)/, '$1data-component="$2"$3')
-
+    
         // 处理 UI 组件 (开始标签)
         result = result.replace(/<a-(\w+)([^>]*?)\/?>/g, (match, componentName, attributes) => {
-            return this.uiParser.convertStartTag(componentName, attributes)
+            // 移除结尾的 /> 或 > 符号后再处理
+            const cleanAttributes = attributes.replace(/\/?>$/, '');
+            return this.uiParser.convertStartTag(componentName, cleanAttributes);
         })
-
+    
         // 处理 UI 组件 (结束标签)
         result = result.replace(/<\/a-(\w+)>/g, (match, componentName) => {
             return this.uiParser.convertEndTag(componentName)
         })
-
+    
         // 移除所有 Vue 特定语法，但保留 data-component 属性
         result = result
             .replace(/{{[^}]*}}/g, '')
@@ -137,7 +139,7 @@ class VueToPhpConverter {
             .replace(/\s*=\s*/g, '=')
             .replace(/>\s+</g, '> <')
             .trim()
-
+    
         return result
     }
 
