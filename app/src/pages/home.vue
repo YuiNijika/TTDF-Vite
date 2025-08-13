@@ -41,15 +41,27 @@ const buttons = ref([
     }
 ])
 
+import { notification } from 'ant-design-vue';
+const openNotification = () => {
+    notification.open({
+        message: 'Notification Title',
+        description:
+            'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
+        onClick: () => {
+            console.log('Notification Clicked!');
+        },
+    });
+};
+
 onMounted(() => {
     console.log('is home.vue test')
+    openNotification();
 })
 </script>
 
 <template>
     <div class="home-page">
         <a-alert message="is home" type="success" show-icon />
-        <h1>首页 home.vue</h1>
         <p>这是首页内容 TTDF+Vite+Vue3</p>
         <p v-for="item in items" :key="item.title">
             {{ item.title }}

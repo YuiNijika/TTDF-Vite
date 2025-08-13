@@ -52,7 +52,7 @@ class VueToPhpConverter {
     parseVueFile(filePath) {
         const vueContent = fs.readFileSync(filePath, 'utf-8')
         const { descriptor } = parse(vueContent)
-        
+
         let templateContent = ''
         let scriptContent = ''
 
@@ -288,19 +288,19 @@ Get::Components('AppFooter');
 
         const pageName = file.replace('.vue', '')
         const vueFilePath = path.join(this.pagesDir, file)
-        
+
         // 解析 Vue 文件
         const { templateContent, scriptContent } = this.parseVueFile(vueFilePath)
-        
+
         // 提取组件数据
         const componentData = this.extractComponentData(scriptContent)
-        
+
         // 生成静态模板内容
         const staticTemplateContent = this.convertToStaticTemplate(templateContent, componentData)
-        
+
         // 生成PHP模板
         const pageContent = this.generatePhpTemplate(pageName, staticTemplateContent)
-        
+
         // 写入文件
         fs.writeFileSync(path.join(this.distDir, `${pageName}.php`), pageContent)
     }
@@ -309,11 +309,11 @@ Get::Components('AppFooter');
     convert() {
         this.ensureDistDir()
         const pageFiles = this.getPageFiles()
-        
+
         pageFiles.forEach(file => {
             this.processPageFile(file)
         })
-        
+
         console.log('✅ TTDF: Static PHP page templates generated successfully!')
     }
 }
