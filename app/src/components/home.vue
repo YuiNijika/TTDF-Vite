@@ -15,7 +15,7 @@ const items = ref([
     },
     {
         title: 'test1',
-    },
+    }
 ])
 
 const buttons = ref([
@@ -54,13 +54,13 @@ const openNotification = () => {
 };
 
 onMounted(() => {
-    console.log('is home.vue test')
+    console.log('is Home.vue test')
     openNotification();
 })
 </script>
 
 <template>
-    <div class="home-page">
+    <div id="home-component" class="home-page" data-component="home">
         <a-alert message="is home" type="success" show-icon />
         <p>这是首页内容 TTDF+Vite+Vue3</p>
         <p v-for="item in items" :key="item.title">

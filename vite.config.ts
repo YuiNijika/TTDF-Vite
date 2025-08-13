@@ -3,34 +3,50 @@ import Components from 'unplugin-vue-components/vite';
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers';
 import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
-import fs from 'fs'
+import * as fs from 'fs'
 
-// 动态生成每个页面的入口配置
-const pagesDir = resolve(__dirname, 'app/src/pages')
-const pageFiles = fs.readdirSync(pagesDir)
-const input: Record<string, string> = {}
+// 创建一个统一的入口文件
+const entryFile = resolve(__dirname, 'app/src/entry-components.ts')
+const componentsDir = resolve(__dirname, 'app/src/components')
+const componentFiles = fs.readdirSync(componentsDir)
 
-// 为每个页面创建独立的入口点
-pageFiles.forEach(file => {
+// 生成统一入口文件的内容
+let entryContent = `import 'ant-design-vue/dist/reset.css';\n\n`
+
+componentFiles.forEach(file => {
     if (file.endsWith('.vue')) {
         const name = file.replace('.vue', '')
-        // 为每个页面创建一个临时入口文件
-        const entryFile = resolve(__dirname, `app/src/entry-${name}.ts`)
-
-        // 写入页面特定的入口代码
-        const entryContent = `import { createApp } from 'vue'
-import PageComponent from './pages/${file}'
-
-const app = createApp(PageComponent)
-app.mount('#app')`
-
-        fs.writeFileSync(entryFile, entryContent)
-        input[name] = entryFile
+        entryContent += `import ${name} from './components/${file}'\n`
     }
 })
 
-// 保留主入口用于开发环境
-input['main'] = resolve(__dirname, 'app/src/main.ts')
+entryContent += `\n// 挂载所有组件的函数\nexport function mountAllComponents() {\n`
+
+componentFiles.forEach(file => {
+    if (file.endsWith('.vue')) {
+        const name = file.replace('.vue', '')
+        entryContent += `  const ${name}Elements = document.querySelectorAll('[data-component="${name}"]');\n`
+        entryContent += `  ${name}Elements.forEach(el => {\n`
+        entryContent += `    const ${name}App = createApp(${name});\n`
+        entryContent += `    ${name}App.mount(el);\n`
+        entryContent += `  });\n`
+    }
+})
+
+entryContent += `}\n\n`
+
+entryContent += `import { createApp } from 'vue';\n\n`
+entryContent += `// 如果在浏览器环境中，立即挂载所有组件\n`
+entryContent += `if (typeof window !== 'undefined') {\n`
+entryContent += `  if (document.readyState === 'loading') {\n`
+entryContent += `    document.addEventListener('DOMContentLoaded', mountAllComponents);\n`
+entryContent += `  } else {\n`
+entryContent += `    mountAllComponents();\n`
+entryContent += `  }\n`
+entryContent += `}\n`
+
+// 写入统一入口文件
+fs.writeFileSync(entryFile, entryContent)
 
 export default defineConfig({
     plugins: [
@@ -52,10 +68,18 @@ export default defineConfig({
         outDir: 'assets/dist',
         assetsDir: '',
         rollupOptions: {
-            input: input,
+            // 只使用统一入口
+            input: {
+                components: entryFile
+            },
             output: {
-                entryFileNames: '[name].js',
-                assetFileNames: '[name].[ext]',
+                entryFileNames: 'components.js',
+                assetFileNames: (assetInfo) => {
+                    if (assetInfo.name?.endsWith('.css')) {
+                        return 'components.css';
+                    }
+                    return '[name].[ext]';
+                },
                 chunkFileNames: '[name].[hash].js',
                 format: 'es'
             },

@@ -4,7 +4,7 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "vite build && node build-postprocess.cjs",
+        "build": "vite build && node app/src/build-postprocess.cjs",
         "preview": "vite preview"
     },
     "devDependencies": {
@@ -21,6 +21,7 @@
     },
     "dependencies": {
         "ant-design-vue": "^4.2.6",
+        "vite-plugin-css-injected-by-js": "^3.5.2",
         "vite-plugin-static-copy": "^3.1.1"
     }
 }

@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import Component from './components/home.vue'
+import Component from '../components/home.vue'
 import 'ant-design-vue/dist/reset.css';
 
 const app = createApp(Component)

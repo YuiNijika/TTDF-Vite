@@ -1,12 +1,12 @@
 import { createApp } from 'vue'
-import Component from './components/home.vue'
+import Component from '../components/post.vue'
 import 'ant-design-vue/dist/reset.css';
 
 const app = createApp(Component)
 
 // 挂载到组件内的第一个元素而不是 #app
 const mountComponent = () => {
-  const componentElements = document.querySelectorAll('[data-component="home"]')
+  const componentElements = document.querySelectorAll('[data-component="post"]')
   componentElements.forEach((el, index) => {
     // 为每个实例创建独立的app实例
     if (index === 0) {
