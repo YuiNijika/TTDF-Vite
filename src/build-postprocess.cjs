@@ -7,7 +7,7 @@ const AntdvParser = require('./ui-parser/antdv.cjs')
 
 class VueToPhpConverter {
     constructor(uiParser = new AntdvParser()) {
-        this.distDir = path.resolve(__dirname, '../components/dist')
+        this.distDir = path.resolve(__dirname, 'dist')
         this.componentsDir = path.resolve(__dirname, 'components')
         this.uiParser = uiParser // 注入UI解析器
     }
