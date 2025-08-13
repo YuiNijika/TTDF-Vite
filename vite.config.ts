@@ -4,33 +4,49 @@ import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers';
 import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
 import * as fs from 'fs'
+import * as path from 'path'
 
 // 创建一个统一的入口文件
 const entryFile = resolve(__dirname, 'src/entry-components.ts')
 const componentsDir = resolve(__dirname, 'src/components')
-const componentFiles = fs.readdirSync(componentsDir)
+
+// 递归获取所有.vue文件
+function getAllVueFiles(dir: string): string[] {
+    let results: string[] = [];
+    const list = fs.readdirSync(dir);
+    list.forEach((file) => {
+        file = resolve(dir, file);
+        const stat = fs.statSync(file);
+        if (stat && stat.isDirectory()) {
+            results = [...results, ...getAllVueFiles(file)];
+        } else if (file.endsWith('.vue')) {
+            results.push(file);
+        }
+    });
+    return results;
+}
+
+const vueFiles = getAllVueFiles(componentsDir);
 
 // 生成统一入口文件的内容
 let entryContent = `import 'ant-design-vue/dist/reset.css';\n\n`
 
-componentFiles.forEach(file => {
-    if (file.endsWith('.vue')) {
-        const name = file.replace('.vue', '')
-        entryContent += `import ${name} from './components/${file}'\n`
-    }
+vueFiles.forEach(file => {
+    const relativePath = path.relative(componentsDir, file).replace(/\\/g, '/');
+    const name = relativePath.replace('.vue', '').replace(/\//g, '_'); // 使用下划线连接路径
+    entryContent += `import ${name} from './components/${relativePath}'\n`
 })
 
 entryContent += `\n// 挂载所有组件的函数\nexport function mountAllComponents() {\n`
 
-componentFiles.forEach(file => {
-    if (file.endsWith('.vue')) {
-        const name = file.replace('.vue', '')
-        entryContent += `  const ${name}Elements = document.querySelectorAll('[data-component="${name}"]');\n`
-        entryContent += `  ${name}Elements.forEach(el => {\n`
-        entryContent += `    const ${name}App = createApp(${name});\n`
-        entryContent += `    ${name}App.mount(el);\n`
-        entryContent += `  });\n`
-    }
+vueFiles.forEach(file => {
+    const relativePath = path.relative(componentsDir, file).replace(/\\/g, '/');
+    const name = relativePath.replace('.vue', '').replace(/\//g, '_');
+    entryContent += `  const ${name}Elements = document.querySelectorAll('[data-component="${name}"]');\n`
+    entryContent += `  ${name}Elements.forEach(el => {\n`
+    entryContent += `    const ${name}App = createApp(${name});\n`
+    entryContent += `    ${name}App.mount(el);\n`
+    entryContent += `  });\n`
 })
 
 entryContent += `}\n\n`

@@ -19,9 +19,20 @@ class VueToPhpConverter {
         }
     }
 
-    // 获取所有组件文件
-    getComponentFiles() {
-        return fs.readdirSync(this.componentsDir)
+    // 递归获取所有组件文件
+    getComponentFiles(dir = this.componentsDir) {
+        let results = [];
+        const list = fs.readdirSync(dir);
+        list.forEach((file) => {
+            file = path.resolve(dir, file);
+            const stat = fs.statSync(file);
+            if (stat && stat.isDirectory()) {
+                results = [...results, ...this.getComponentFiles(file)];
+            } else if (file.endsWith('.vue')) {
+                results.push(file);
+            }
+        });
+        return results;
     }
 
     // 解析Vue文件
@@ -143,13 +154,11 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 
     // 处理单个组件文件
     processComponentFile(file) {
-        if (!file.endsWith('.vue')) return
-
-        const componentName = file.replace('.vue', '')
-        const vueFilePath = path.join(this.componentsDir, file)
+        const relativePath = path.relative(this.componentsDir, file);
+        const componentName = relativePath.replace('.vue', '').replace(/\\/g, '/').replace(/\//g, '_'); // 使用下划线连接路径
 
         // 解析 Vue 文件
-        const { templateContent, scriptContent } = this.parseVueFile(vueFilePath)
+        const { templateContent, scriptContent } = this.parseVueFile(file)
 
         // 提取组件数据
         const componentData = this.extractComponentData(scriptContent)
@@ -160,8 +169,14 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
         // 生成PHP模板
         const componentContent = this.generatePhpTemplate(componentName, staticTemplateContent)
 
+        // 确保输出目录存在
+        const outputFileDir = path.dirname(path.join(this.distDir, relativePath));
+        if (!fs.existsSync(outputFileDir)) {
+            fs.mkdirSync(outputFileDir, { recursive: true });
+        }
+
         // 写入文件
-        fs.writeFileSync(path.join(this.distDir, `${componentName}.php`), componentContent)
+        fs.writeFileSync(path.join(this.distDir, `${relativePath.replace('.vue', '.php')}`), componentContent)
     }
 
     // 执行转换过程
