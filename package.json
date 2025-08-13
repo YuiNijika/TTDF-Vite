@@ -4,7 +4,7 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "vite build && node app/src/build-postprocess.cjs",
+        "build": "vite build && node src/build-postprocess.cjs",
         "preview": "vite preview"
     },
     "devDependencies": {
