@@ -1,5 +1,6 @@
 <?php
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
+
 // 添加样式到头部
 TTDF_Hook::add_action('load_head', function () {
     $cssFile = 'assets/dist/home.css';
@@ -12,28 +13,17 @@ TTDF_Hook::add_action('load_head', function () {
 
 // 添加脚本到底部
 TTDF_Hook::add_action('load_foot', function () {
-    // 先引入主应用脚本
-    $mainJsFile = 'assets/dist/main.js';
-    if (file_exists(__DIR__ . '/../../../' . $mainJsFile)) {
-        ?>
-        <script type="module" src="<?php get_theme_file_url($mainJsFile . '?ver=' . get_theme_version(false)); ?>"></script>
-        <?php
-    }
-    
-    // 再引入页面特定脚本（如果有的话）
+    // 引入页面特定脚本作为主应用
     $jsFile = 'assets/dist/home.js';
-    if (file_exists(__DIR__ . '/../../../' . $jsFile) && 'home' !== 'home') {
+    if (file_exists(__DIR__ . '/../../../' . $jsFile)) {
         ?>
-        <script type="module" src="<?php get_theme_file_url($jsFile . '?ver=' . get_theme_version(false)); ?>"></script>
+        <script type="module" src="<?php echo get_theme_file_url($jsFile . '?ver=' . get_theme_version(false)); ?>"></script>
         <?php
     }
 });
 Get::Components('AppHeader');
 ?>
-<div class="home-page">
-        <h1>首页</h1>
-        <p>这是首页内容</p>
-    </div>
+    <div class="home-page"> <h1>首页 home.vue</h1> <p>这是首页内容 TTDF+Vite+Vue3</p> <p>test</p><p>test1</p> <div class="ant-space ant-space-wrap">> <button class="ant-button ant-button-primary">>Primary Button</button><button>>Default Button</button><button class="ant-button ant-button-dashed">>Dashed Button</button><button class="ant-button ant-button-text">>Text Button</button><button class="ant-button ant-button-link">>Link Button</button> </div> </div>
 <?php
 Get::Components('AppFooter');
 ?>

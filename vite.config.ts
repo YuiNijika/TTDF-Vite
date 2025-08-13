@@ -1,4 +1,6 @@
 import { defineConfig } from 'vite'
+import Components from 'unplugin-vue-components/vite';
+import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers';
 import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
 import fs from 'fs'
@@ -14,14 +16,14 @@ pageFiles.forEach(file => {
         const name = file.replace('.vue', '')
         // 为每个页面创建一个临时入口文件
         const entryFile = resolve(__dirname, `app/src/entry-${name}.ts`)
-        
+
         // 写入页面特定的入口代码
         const entryContent = `import { createApp } from 'vue'
 import PageComponent from './pages/${file}'
 
 const app = createApp(PageComponent)
 app.mount('#app')`
-        
+
         fs.writeFileSync(entryFile, entryContent)
         input[name] = entryFile
     }
@@ -31,7 +33,16 @@ app.mount('#app')`
 input['main'] = resolve(__dirname, 'app/src/main.ts')
 
 export default defineConfig({
-    plugins: [vue()],
+    plugins: [
+        Components({
+            resolvers: [
+                AntDesignVueResolver({
+                    importStyle: false,
+                }),
+            ],
+        }),
+        vue(),
+    ],
     resolve: {
         alias: {
             '@': resolve(__dirname, './app/src')
