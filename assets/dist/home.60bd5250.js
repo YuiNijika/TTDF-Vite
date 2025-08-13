@@ -1,0 +1,1 @@
+import{_ as s,o as _,a as t,b as n,d as o}from"./_plugin-vue_export-helper.17f39300.js";const a={class:"home-page"},c={__name:"home",setup(p){return _(()=>{console.log("is home")}),(l,e)=>(t(),n("div",a,e[0]||(e[0]=[o("h1",null,"首页",-1),o("p",null,"这是首页内容",-1)])))}},m=s(c,[["__scopeId","data-v-3589c63e"]]);export{m as P};
