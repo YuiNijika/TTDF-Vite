@@ -6,8 +6,8 @@ import { resolve } from 'path'
 import * as fs from 'fs'
 
 // 创建一个统一的入口文件
-const entryFile = resolve(__dirname, 'app/src/entry-components.ts')
-const componentsDir = resolve(__dirname, 'app/src/components')
+const entryFile = resolve(__dirname, 'src/entry-components.ts')
+const componentsDir = resolve(__dirname, 'src/components')
 const componentFiles = fs.readdirSync(componentsDir)
 
 // 生成统一入口文件的内容
@@ -61,7 +61,7 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
-            '@': resolve(__dirname, './app/src')
+            '@': resolve(__dirname, './src')
         }
     },
     build: {
