@@ -1,6 +1,14 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 
+const open = ref(false);
+const afterOpenChange = bool => {
+    console.log('open', bool);
+};
+const showDrawer = () => {
+    open.value = true;
+};
+
 const items = ref([
     {
         title: 'test',
@@ -40,6 +48,7 @@ onMounted(() => {
 
 <template>
     <div class="home-page">
+        <a-alert message="is home" type="success" show-icon />
         <h1>首页 home.vue</h1>
         <p>这是首页内容 TTDF+Vite+Vue3</p>
         <p v-for="item in items" :key="item.title">
@@ -51,6 +60,15 @@ onMounted(() => {
                 {{ button.text }}
             </a-button>
         </a-space>
+
+        <a-button type="primary" @click="showDrawer">Open</a-button>
+        <a-drawer v-model:open="open" class="custom-class" root-class-name="root-class-name"
+            :root-style="{ color: 'blue' }" style="color: red" title="Basic Drawer" placement="right"
+            @after-open-change="afterOpenChange">
+            <p>Some contents...</p>
+            <p>Some contents...</p>
+            <p>Some contents...</p>
+        </a-drawer>
     </div>
 </template>
 

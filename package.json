@@ -8,6 +8,9 @@
         "preview": "vite preview"
     },
     "devDependencies": {
+        "@babel/generator": "^7.28.0",
+        "@babel/parser": "^7.28.0",
+        "@babel/traverse": "^7.28.0",
         "@types/node": "^24.2.1",
         "@vitejs/plugin-vue": "^4.6.2",
         "sass": "^1.60.0",

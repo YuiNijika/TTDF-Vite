@@ -13,7 +13,7 @@ return [
     'DEBUG' => false, // TTDF Debug
     'FIELDS_ENABLED' => false, // 是否启用自定义字段
     'TYAJAX_ENABLED' => false, // 是否启用TyAjax模块
-    'COMPRESS_HTML' => false, // 是否启用HTML压缩
+    'COMPRESS_HTML' => true, // 是否启用HTML压缩
     'GRAVATAR_PREFIX' => 'https://cravatar.cn/avatar/', // Gravatar前缀
     'REST_API' => [
         'ENABLED' => false, // 是否启用REST API
