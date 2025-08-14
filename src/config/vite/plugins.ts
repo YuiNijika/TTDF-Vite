@@ -14,7 +14,7 @@ export const getPluginsConfig = (): PluginOption[] => {
                 'vue',
                 'vue-router'
             ],
-            dts: 'src/auto-imports.d.ts',
+            dts: 'src/config/auto-imports.d.ts',
             dirs: [
                 'src/composables',
                 'src/utils'
@@ -40,7 +40,7 @@ export const getPluginsConfig = (): PluginOption[] => {
             dirs: ['src/components'],
             extensions: ['vue'],
             deep: true,
-            dts: 'src/components.d.ts',
+            dts: 'src/config/components.d.ts',
             resolvers,
             types: [{
                 from: 'vue-router',

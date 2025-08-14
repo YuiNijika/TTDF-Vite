@@ -1,6 +1,6 @@
 import 'ant-design-vue/dist/reset.css';
 
-import WelCome from './components/WelCome.vue'
+import WelCome from '../components/WelCome.vue'
 
 // 挂载所有组件的函数
 export function mountAllComponents() {

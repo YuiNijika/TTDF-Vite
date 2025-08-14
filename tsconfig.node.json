@@ -8,5 +8,5 @@
   "include": [
     "vite.config.ts",
     "src/config/**/*.ts"
-  ]
+, "src/config/entry-generator.ts", "src/config/entry-components.ts", "src/config/components.d.ts", "src/config/auto-imports.d.ts"  ]
 }

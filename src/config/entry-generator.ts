@@ -8,7 +8,7 @@ export class EntryFileGenerator {
     private componentsDir: string
 
     constructor() {
-        this.entryFile = resolve(__dirname, '../../src/entry-components.ts')
+        this.entryFile = resolve(__dirname, '../../src/config/entry-components.ts')
         this.componentsDir = resolve(__dirname, '../../src/components')
     }
 
@@ -39,13 +39,13 @@ export class EntryFileGenerator {
         if (uiConfig.framework === 'antdv') {
             entryContent += `import 'ant-design-vue/dist/reset.css';\n\n`
         } else if (uiConfig.framework === 'tailwindcss') {
-            entryContent += `import './styles/main.scss';\n\n`
+            entryContent += `import '../styles/main.scss';\n\n`
         }
 
         vueFiles.forEach(file => {
             const relativePath = path.relative(this.componentsDir, file).replace(/\\/g, '/')
             const name = relativePath.replace('.vue', '').replace(/\//g, '_')
-            entryContent += `import ${name} from './components/${relativePath}'\n`
+            entryContent += `import ${name} from '../components/${relativePath}'\n`
         })
 
         entryContent += `\n// 挂载所有组件的函数\nexport function mountAllComponents() {\n`

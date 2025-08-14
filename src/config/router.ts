@@ -6,7 +6,7 @@ export function setupRouter(app: App) {
         {
             path: '/',
             name: 'Home',
-            component: () => import('./views/index.vue')
+            component: () => import('../views/index.vue')
         }
     ]
 
