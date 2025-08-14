@@ -20,7 +20,7 @@ export const getPluginsConfig = (): PluginOption[] => [
         ],
         vueTemplate: true,
         eslintrc: {
-            enabled: false, // 当设置为 true 时，会生成 .eslintrc-auto-import.json 文件
+            enabled: false,
         }
     }),
 
@@ -32,10 +32,9 @@ export const getPluginsConfig = (): PluginOption[] => [
         dts: 'src/components.d.ts',
         resolvers: [
             AntDesignVueResolver({
-                importStyle: false, // 设置为 'less' 如果你使用 less
+                importStyle: false,
             })
         ],
-        // 生成组件类型声明
         types: [{
             from: 'vue-router',
             names: ['RouterLink', 'RouterView']
