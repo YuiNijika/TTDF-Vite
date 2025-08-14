@@ -1,12 +1,22 @@
 import type { PluginOption } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import tailwindcss from "@tailwindcss/vite";
+import vue from "@vitejs/plugin-vue";
 import Components from 'unplugin-vue-components/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 import { uiConfig } from '../ui'
 
 export const getPluginsConfig = (): PluginOption[] => {
-    const plugins: PluginOption[] = [vue()]
+    const plugins: PluginOption[] = []
+    
+    // tailwindcss
+    if (uiConfig.framework === 'tailwind') {
+        plugins.push(tailwindcss())
+    }
+    
+    // 添加 vue 插件
+    plugins.push(vue())
+    
     // 自动导入 Vue 相关 API
     plugins.push(
         AutoImport({
@@ -25,13 +35,11 @@ export const getPluginsConfig = (): PluginOption[] => {
             }
         })
     )
+    
     const resolvers = []
+    // 只有在使用 antdv 时才添加 Ant Design Vue 解析器
     if (uiConfig.framework === 'antdv') {
-        resolvers.push(
-            AntDesignVueResolver({
-                importStyle: false,
-            })
-        )
+        resolvers.push(AntDesignVueResolver())
     }
 
     // 自动导入组件
@@ -48,6 +56,6 @@ export const getPluginsConfig = (): PluginOption[] => {
             }]
         })
     )
-
+    
     return plugins
 }

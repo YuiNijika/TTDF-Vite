@@ -3,7 +3,7 @@
 </script>
 
 <template>
-    <WelCome />
+    <Daisyui />
 </template>
 
 <style scoped>

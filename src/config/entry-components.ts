@@ -1,13 +1,11 @@
-import 'ant-design-vue/dist/reset.css';
-
-import WelCome from '../components/WelCome.vue'
+import Daisyui from '../components/Daisyui.vue'
 
 // 挂载所有组件的函数
 export function mountAllComponents() {
-  const WelComeElements = document.querySelectorAll('[data-component="WelCome"]');
-  WelComeElements.forEach(el => {
-    const WelComeApp = createApp(WelCome);
-    WelComeApp.mount(el);
+  const DaisyuiElements = document.querySelectorAll('[data-component="Daisyui"]');
+  DaisyuiElements.forEach(el => {
+    const DaisyuiApp = createApp(Daisyui);
+    DaisyuiApp.mount(el);
   });
 }
 

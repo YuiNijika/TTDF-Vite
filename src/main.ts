@@ -7,8 +7,8 @@ import { setupRouter } from './config/router'
 // 根据配置决定导入哪种样式
 if (uiConfig.framework === 'antdv') {
     import('ant-design-vue/dist/reset.css');
-} else if (uiConfig.framework === 'tailwindcss') {
-    import('./styles/main.scss');
+} else if (uiConfig.framework === 'tailwind') {
+    import('./styles/tailwind.css');
 }
 
 // 自动导入 components 目录下的所有 vue 组件
