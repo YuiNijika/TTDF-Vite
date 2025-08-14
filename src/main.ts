@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import App from './app.vue' 
 import 'ant-design-vue/dist/reset.css';
 import { DatePicker } from 'ant-design-vue';
 
@@ -10,38 +11,47 @@ const componentMap: Record<string, () => Promise<any>> = {};
 
 // 构建组件映射关系
 Object.keys(modules).forEach((key) => {
-    // 从文件路径提取组件名
     const componentName = key.match(/\/([^/]+)\.vue$/)?.[1];
     if (componentName) {
         componentMap[componentName] = modules[key];
     }
 });
 
-const app = createApp({})
+// 检查是否在开发模式下运行
+const isDevMode = import.meta.env.DEV;
 
-app.use(DatePicker)
+let app;
 
-// 修改挂载逻辑，查找组件内的目标元素
-const mountApp = () => {
-    const componentElements = document.querySelectorAll('[data-component]')
+if (isDevMode) {
+    // 开发模式下使用 App.vue 作为根组件
+    app = createApp(App)
+    app.use(DatePicker)
+    app.mount('#app')
+} else {
+    // 生产模式下保持原有逻辑
+    app = createApp({})
+    app.use(DatePicker)
 
-    componentElements.forEach(el => {
-        const componentName = el.getAttribute('data-component');
-        if (componentName && componentMap[componentName]) {
-            componentMap[componentName]().then(module => {
-                const component = module.default || module;
-                createApp(component).mount(el);
-            });
+    const mountApp = () => {
+        const componentElements = document.querySelectorAll('[data-component]')
+
+        componentElements.forEach(el => {
+            const componentName = el.getAttribute('data-component');
+            if (componentName && componentMap[componentName]) {
+                componentMap[componentName]().then(module => {
+                    const component = module.default || module;
+                    createApp(component).mount(el);
+                });
+            }
+        });
+    }
+
+    if (typeof window !== 'undefined') {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', mountApp)
+        } else {
+            mountApp()
         }
-    });
-}
-
-// DOM 加载完成后挂载
-if (typeof window !== 'undefined') {
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', mountApp)
-    } else {
-        mountApp()
     }
 }
 

@@ -1,10 +1,12 @@
 <?php 
 /**
- * 欢迎使用Typecho主题模板开发框架！
- * @package TTDF Vite
+ * Kasumi Theme for Typecho.
+ * @package Kasumi
  * @author 鼠子(Tomoriゞ)
  * @version 1.0.0
- * @link https://github.com/YuiNijika/TTDF
+ * @link https://github.com/YuiNijika/Kasumi
  */
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-Get::Components('dist/home');
+Get::Components('AppHeader');
+Get::Components('WelCome');
+Get::Components('AppFooter');

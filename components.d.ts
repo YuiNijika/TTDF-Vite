@@ -8,9 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    AAlert: typeof import('ant-design-vue/es')['Alert']
-    AButton: typeof import('ant-design-vue/es')['Button']
-    ADrawer: typeof import('ant-design-vue/es')['Drawer']
-    ASpace: typeof import('ant-design-vue/es')['Space']
+    AMenu: typeof import('ant-design-vue/es')['Menu']
+    WelCome: typeof import('./src/components/WelCome.vue')['default']
   }
 }
