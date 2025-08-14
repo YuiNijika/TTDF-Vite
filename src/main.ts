@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import App from './app.vue' 
 import 'ant-design-vue/dist/reset.css';
 import { DatePicker } from 'ant-design-vue';
+import { setupRouter } from './router'
 
 // 自动导入 components 目录下的所有 vue 组件
 const modules = import.meta.glob('./components/*.vue');
@@ -26,6 +27,10 @@ if (isDevMode) {
     // 开发模式下使用 App.vue 作为根组件
     app = createApp(App)
     app.use(DatePicker)
+    
+    // 设置路由
+    setupRouter(app)
+    
     app.mount('#app')
 } else {
     // 生产模式下保持原有逻辑

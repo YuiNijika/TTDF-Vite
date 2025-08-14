@@ -23,7 +23,10 @@
     },
     "dependencies": {
         "ant-design-vue": "^4.2.6",
+        "unplugin-vue-router": "^0.15.0",
         "vite-plugin-css-injected-by-js": "^3.5.2",
-        "vite-plugin-static-copy": "^3.1.1"
+        "vite-plugin-static-copy": "^3.1.1",
+        "vue-router": "^4.5.1",
+        "vue-router-auto": "^2.0.0"
     }
 }
