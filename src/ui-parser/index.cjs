@@ -2,7 +2,7 @@ const AntdvParser = require('./antdv.cjs');
 const TailwindParser = require('./tailwind.cjs');
 
 const uiConfig = {
-    framework: 'tailwind'
+    framework: 'antdv'
 };
 
 module.exports = {

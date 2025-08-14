@@ -1,9 +1,11 @@
 <script setup>
+import Antdv from '../components/Antdv.vue';
+
 
 </script>
 
 <template>
-    <Daisyui />
+    <Antdv />
 </template>
 
 <style scoped>

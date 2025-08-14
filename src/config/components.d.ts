@@ -8,6 +8,12 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AButton: typeof import('ant-design-vue/es')['Button']
+    ACard: typeof import('ant-design-vue/es')['Card']
+    ACardMeta: typeof import('ant-design-vue/es')['CardMeta']
+    ACol: typeof import('ant-design-vue/es')['Col']
+    Antdv: typeof import('./../components/Antdv.vue')['default']
+    ARow: typeof import('ant-design-vue/es')['Row']
     Daisyui: typeof import('./../components/Daisyui.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

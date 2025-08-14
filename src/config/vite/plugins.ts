@@ -8,15 +8,10 @@ import { uiConfig } from '../ui'
 
 export const getPluginsConfig = (): PluginOption[] => {
     const plugins: PluginOption[] = []
-    
-    // tailwindcss
-    if (uiConfig.framework === 'tailwind') {
-        plugins.push(tailwindcss())
-    }
-    
+
     // 添加 vue 插件
     plugins.push(vue())
-    
+
     // 自动导入 Vue 相关 API
     plugins.push(
         AutoImport({
@@ -35,11 +30,20 @@ export const getPluginsConfig = (): PluginOption[] => {
             }
         })
     )
-    
+
+    // antdv
     const resolvers = []
-    // 只有在使用 antdv 时才添加 Ant Design Vue 解析器
     if (uiConfig.framework === 'antdv') {
-        resolvers.push(AntDesignVueResolver())
+        resolvers.push(
+            AntDesignVueResolver({
+                importStyle: false,
+            })
+        )
+    }
+
+    // tailwindcss
+    if (uiConfig.framework === 'tailwind') {
+        plugins.push(tailwindcss())
     }
 
     // 自动导入组件
@@ -56,6 +60,6 @@ export const getPluginsConfig = (): PluginOption[] => {
             }]
         })
     )
-    
+
     return plugins
 }

@@ -1,0 +1,6 @@
+<?php
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
+?>
+<div data-component="Antdv">
+    <div class="welcome-container"> <div class="background-effect"> <div class="effect-circle circle-1"></div> <div class="effect-circle circle-2"></div> <div class="effect-circle circle-3"></div> <div class="effect-circle circle-4"></div> </div> <div class="main-content"> <div class="title-section"> <h1 class="welcome-title">TTDF Vite</h1> <p class="welcome-subtitle">使用TTDF+Vite+Vue3快速构建现代主题</p> <div class="title-buttons"> <button class="ant-button ant-button-primary ant-button-large" href="https://github.com/YuiNijika/TTDF-Vite">立即开始</button> <button class="ant-button ant-button-large" href="https://github.com/YuiNijika/TTDF">安装前置</button> </div> </div> <div class="card-section"> <div class="ant-row" justify="center"> <div class="ant-col" key="0" > <div hoverable class="ant-card feature-card"> <div class="ant-card-meta" > </div> </div> </div><div class="ant-col" key="1" > <div hoverable class="ant-card feature-card"> <div class="ant-card-meta" > </div> </div> </div><div class="ant-col" key="2" > <div hoverable class="ant-card feature-card"> <div class="ant-card-meta" > </div> </div> </div> </div> </div> </div> </div>
+</div>
