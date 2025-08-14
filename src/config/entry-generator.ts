@@ -1,6 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import { resolve } from 'path'
+import { uiConfig } from './ui'
 
 export class EntryFileGenerator {
     private entryFile: string
@@ -32,7 +33,14 @@ export class EntryFileGenerator {
         const vueFiles = this.getAllVueFiles(this.componentsDir)
 
         // 生成统一入口文件的内容
-        let entryContent = `import 'ant-design-vue/dist/reset.css';\n\n`
+        let entryContent = '';
+        
+        // 根据配置决定导入哪种样式
+        if (uiConfig.framework === 'antdv') {
+            entryContent += `import 'ant-design-vue/dist/reset.css';\n\n`
+        } else if (uiConfig.framework === 'tailwindcss') {
+            entryContent += `import './styles/main.scss';\n\n`
+        }
 
         vueFiles.forEach(file => {
             const relativePath = path.relative(this.componentsDir, file).replace(/\\/g, '/')

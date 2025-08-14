@@ -1,8 +1,15 @@
 import { createApp } from 'vue'
-import App from './app.vue' 
-import 'ant-design-vue/dist/reset.css';
+import App from './app.vue'
+import { uiConfig } from './config/ui'
 import { DatePicker } from 'ant-design-vue';
 import { setupRouter } from './router'
+
+// 根据配置决定导入哪种样式
+if (uiConfig.framework === 'antdv') {
+    import('ant-design-vue/dist/reset.css');
+} else if (uiConfig.framework === 'tailwindcss') {
+    import('./styles/main.scss');
+}
 
 // 自动导入 components 目录下的所有 vue 组件
 const modules = import.meta.glob('./components/*.vue');
@@ -26,16 +33,22 @@ let app;
 if (isDevMode) {
     // 开发模式下使用 App.vue 作为根组件
     app = createApp(App)
-    app.use(DatePicker)
-    
+    // 只在使用 antdv 时注册 DatePicker
+    if (uiConfig.framework === 'antdv') {
+        app.use(DatePicker)
+    }
+
     // 设置路由
     setupRouter(app)
-    
+
     app.mount('#app')
 } else {
     // 生产模式下保持原有逻辑
     app = createApp({})
-    app.use(DatePicker)
+    // 只在使用 antdv 时注册 DatePicker
+    if (uiConfig.framework === 'antdv') {
+        app.use(DatePicker)
+    }
 
     const mountApp = () => {
         const componentElements = document.querySelectorAll('[data-component]')
