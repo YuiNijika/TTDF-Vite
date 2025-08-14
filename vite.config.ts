@@ -18,6 +18,6 @@ export default defineConfig({
         alias: getAliasConfig()
     },
     build: getBuildConfig(),
-    server: getServerConfig(), 
+    server: getServerConfig(),
     root: process.cwd()
 })
