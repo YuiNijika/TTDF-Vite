@@ -1,7 +1,5 @@
-export interface UIConfig {
-    framework: 'antdv';
-}
+// 需同步修改 src/ui-parser/index.cjs
 
-export const uiConfig: UIConfig = {
+export const uiConfig = {
     framework: 'antdv'
 };

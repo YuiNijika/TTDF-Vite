@@ -1,5 +1,12 @@
-const { uiConfig } = require('../config/ui');
 const AntdvParser = require('./antdv.cjs');
+
+const uiConfig = {
+    framework: 'antdv'
+};
+
+module.exports = {
+    uiConfig
+};
 
 class UIParserFactory {
     static createParser() {

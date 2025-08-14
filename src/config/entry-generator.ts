@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import { resolve } from 'path'
-import { uiConfig } from './ui'
+import { uiConfig } from './ui' 
 
 export class EntryFileGenerator {
     private entryFile: string
