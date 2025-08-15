@@ -57,7 +57,10 @@ export const getPluginsConfig = (): PluginOption[] => {
             types: [{
                 from: 'vue-router',
                 names: ['RouterLink', 'RouterView']
-            }]
+            }],
+            // 启用目录作为命名空间
+            directoryAsNamespace: true,
+            collapseSamePrefixes: true
         })
     )
 
