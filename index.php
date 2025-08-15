@@ -1,7 +1,7 @@
 <?php 
 /**
- * Kasumi Theme for Typecho.
- * @package Kasumi
+ * TTDF framework integration Vite.
+ * @package TTDF Vite
  * @author 鼠子(Tomoriゞ)
  * @version 1.0.0
  * @link https://github.com/YuiNijika/Kasumi
