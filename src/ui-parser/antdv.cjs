@@ -266,7 +266,7 @@ class AntdvParser extends BaseUIParser {
     }
 
     // 处理 Vue 模板为静态 HTML 模板
-    convertToStaticTemplate(templateContent, componentData) {
+    convertToStaticTemplate(templateContent, componentData, compress = false) {
         // 首先处理 v-for 循环展开
         let result = this.expandVForLoops(templateContent, componentData)
 
@@ -276,7 +276,7 @@ class AntdvParser extends BaseUIParser {
         // 处理 UI 组件 (开始标签)
         result = result.replace(/<a-([a-zA-Z0-9-]+)([^>]*?)\/?>/g, (match, componentName, attributes) => {
             // 移除结尾的 /> 或 > 符号后再处理
-            const cleanAttributes = attributes.replace(/\/?>$/, '');
+            const cleanAttributes = attributes.replace(/\/?>\$/, '');
             return this.convertStartTag(componentName, cleanAttributes);
         })
 
@@ -294,12 +294,9 @@ class AntdvParser extends BaseUIParser {
             .replace(/@\w+(?=\s|>)(?![^"]*data-component)/g, '')
             .replace(/:\w+(?=\s|>)(?![^"]*data-component)/g, '')
             .replace(/v-\w+(?=\s|>)(?![^"]*data-component)/g, '')
-            .replace(/\s{2,}/g, ' ')
-            .replace(/\s*=\s*/g, '=')
-            .replace(/>\s+</g, '> <')
-            .trim()
 
-        return result
+        // 使用基类的压缩方法处理最终输出
+        return this.compressContent(result, compress)
     }
 }
 
