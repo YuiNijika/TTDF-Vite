@@ -1,8 +1,9 @@
 import { createApp } from 'vue'
 import App from './app.vue'
 import { uiConfig } from './config/ui'
-import { DatePicker } from 'ant-design-vue';
+import { DatePicker } from 'ant-design-vue'
 import { setupRouter } from './config/router'
+import './styles/main.scss'
 
 // 根据配置决定导入哪种样式
 if (uiConfig.framework === 'antdv') {
